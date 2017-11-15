@@ -1,6 +1,6 @@
 #include <iostream>
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    std::cout << "ransomware de la mort qui tue ! niark niark" << std::endl;
     return 0;
 }

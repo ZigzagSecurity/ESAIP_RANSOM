@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/ESAIP_RANSOM.dir/client/main.cpp.o  -o ESAIP_RANSOM 
