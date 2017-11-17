@@ -1,0 +1,5 @@
+/.idea
+/cmake-build-debug
+/client/.idea
+/client/cmake-build-debug
+/client/CMakeLists.txt
