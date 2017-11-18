@@ -1,2 +1,0 @@
-Options: 
-CMake: 3.8.2@/home/bob/Téléchargements/CLion-2017.2.3/clion-2017.2.3/bin/cmake/bin/cmake
