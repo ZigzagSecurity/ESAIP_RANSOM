@@ -1,6 +1,19 @@
 #include <iostream>
+#include <stdio.h>
+#include <dirent.h>
 
-int main() {
-    std::cout << "ransomware de la mort qui tue ! niark niark" << std::endl;
-    return 0;
-}
+    int main(void) {
+        DIR * rep = opendir(".");
+
+        if (rep != NULL) {
+            struct dirent * ent;
+
+            while ((ent = readdir(rep)) != NULL) {
+                printf("%s\n", ent->d_name);
+            }
+
+            closedir(rep);
+        }
+
+        return 0;
+    }
