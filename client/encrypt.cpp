@@ -1,9 +1,9 @@
+#include <openssl/aes.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
 #include <openssl/evp.h>
-#include <openssl/aes.h>
 
 
 void ls_dir(char* start_path);
@@ -99,22 +99,22 @@ void encryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv)
 
 
     const unsigned bufsize = 4096;
-    unsigned char* read_buf = malloc(bufsize);
-    unsigned char* cipher_buf ;
-    unsigned blocksize;
+    unsigned char* read_buf = (unsigned char*)malloc(bufsize);
+    unsigned char* cipher_buf;
+    int blocksize;
     int out_len;
 
-    EVP_CIPHER_CTX ctx;
+    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
 
-    EVP_CipherInit(&ctx,EVP_aes_256_cbc(),key,iv,1);
-    blocksize = EVP_CIPHER_CTX_block_size(&ctx);
-    cipher_buf = malloc(bufsize+blocksize);
+    EVP_CipherInit(ctx,EVP_aes_256_cbc(),key,iv,1);
+    blocksize = EVP_CIPHER_CTX_block_size(ctx);
+    cipher_buf = (unsigned char*)malloc(bufsize+blocksize);
 
     // read file and write encrypted file until eof
     while(1)
     {
         int bytes_read = fread(read_buf,sizeof(unsigned char),bufsize,fpin);
-        EVP_CipherUpdate(&ctx,cipher_buf,&out_len,read_buf, bytes_read);
+        EVP_CipherUpdate(ctx,cipher_buf,&out_len,read_buf, bytes_read);
         fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);
         if(bytes_read < bufsize)
         {
@@ -122,7 +122,7 @@ void encryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv)
         }
     }
 
-    EVP_CipherFinal(&ctx,cipher_buf,&out_len);
+    EVP_CipherFinal(ctx,cipher_buf,&out_len);
     fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);
 
     free(cipher_buf);
