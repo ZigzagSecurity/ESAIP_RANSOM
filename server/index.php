@@ -28,7 +28,13 @@ q4P2+yPVFLS9at/5weOMi56YUKyeEbQ6At+owmxl8+GxYQIM5wdBSionDkb5DHH8
 ClsjsmQx5CXRmx6WkE0CQQCq28HF+S+HaTI4fcFQIK8xpiKus5RxQSCw520tFf+N
 jvhtfkRR4d4oR6boiA1ymlozoglPv+rcKQY194pRG5QD
 -----END RSA PRIVATE KEY-----">
-  	<input type="submit">
+  	<input type="submit" value="post.php">
+  </form>
+
+  <form action="getDecrypt.php" method="POST">
+    <input type="hidden" name="ipAddress" value="192.168.0.1">
+    <input type="hidden" name="machineName" value="pc de jean">
+    <input type="submit" value="getDecrypt">
   </form>
   <body>
   </body>
