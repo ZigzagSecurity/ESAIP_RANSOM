@@ -7,8 +7,8 @@ if(isset($_POST['rsa_message']) && isset($_POST['rsa_pukey'])){
 
 //==========ENCRYPTION NOT NEEDED AFTER====================
 //because rsa_message isn't encrypted yet
-	$rsa->loadKey($_POST['rsa_pukey']);
-    $ciphertext = $rsa->encrypt($_POST['rsa_message']);
+	//$rsa->loadKey($_POST['rsa_pukey']);
+    //$ciphertext = $rsa->encrypt($_POST['rsa_message']);
 //==========ENDS HERE======================================
 
     /*we have a public key
@@ -19,9 +19,9 @@ if(isset($_POST['rsa_message']) && isset($_POST['rsa_pukey'])){
 	foreach ($result as $row) {
 		$tmp_prkey=$row['private_key'];
 		$rsa->loadKey($tmp_prkey);
-		echo $rsa->decrypt($ciphertext);
+		//echo $rsa->decrypt($ciphertext);
 		//should replace line above with line below
-		//echo $rsa->decrypt($_POST['rsa_message']);
+		echo $rsa->decrypt($_POST['rsa_message']);
 	}
 
 }
