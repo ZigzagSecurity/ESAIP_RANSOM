@@ -6,8 +6,7 @@ include "database.php";
 */
 if(isset($_POST['machineName']) && isset($_POST['publickey'])){
 	$machineName=$_POST['machineName'];
-	$ipAddress=$_SERVER['REMOTE_ADDR'];
-	$publicKey=$_POST['publicKey'];
+	$publickey=$_POST['publickey'];
 
-	connect("root","")->query("INSERT INTO `infos` (`id`, `machineName`, `ipAddress`, `publickey`) VALUES (NULL, '".$machineName."', '".$ipAddress."','".$publickey."');");
+	connect("root","")->query("INSERT INTO `infos` (`id`, `machineName`, `publickey`) VALUES (NULL, '".$machineName."','".$publickey."');");
 }
