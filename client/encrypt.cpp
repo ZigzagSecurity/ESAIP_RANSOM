@@ -23,8 +23,7 @@ void encryptfile(FILE * fpin, FILE* fpout, unsigned char* key, unsigned char* iv
 	int out_len;
 
 	EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
-
-	EVP_CipherInit(ctx, EVP_aes_256_cbc(), key, iv, 1);
+	EVP_CipherInit(ctx, EVP_aes_256_cbc(), key, iv, 1); // if 0 = decrypt , 1 = encrypt
 	blocksize = EVP_CIPHER_CTX_block_size(ctx);
 	cipher_buf = (unsigned char*)malloc(bufsize + blocksize);
 
@@ -103,8 +102,6 @@ void get_file_encrypt(unsigned char* key, unsigned char* iv, const char* path) {
 	fclose(fpout);
 	remove(path);
 
-	//cout << "========== file encrypted ========\npress enter to continue" << endl;
-
 	free(new_name);
 }
 
@@ -132,8 +129,6 @@ void get_file_decrypt(unsigned char* key, unsigned char* iv, const char* path) {
 
 	remove(encr_path);
 	free(new_name);
-
-	//cout << "========== file decrypted ========\npress enter to finish" << endl;
 	
 }
 
